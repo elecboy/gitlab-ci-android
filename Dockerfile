@@ -25,8 +25,11 @@ RUN apt-get -qq update && \
       lib32ncurses5 \
       lib32z1 \
       unzip \
+      locales \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
+RUN update-locale LANG=C.UTF-8 LC_MESSAGES=POSIX \
+    && locale-gen en_US.UTF-8 zh_CN.UTF-8
+    
 RUN rm -f /etc/ssl/certs/java/cacerts; \
     /var/lib/dpkg/info/ca-certificates-java.postinst configure
 
@@ -43,3 +46,7 @@ RUN mkdir -p /root/.android && \
   touch /root/.android/repositories.cfg && \
   ${ANDROID_HOME}/tools/bin/sdkmanager --update && \
   (while [ 1 ]; do sleep 5; echo y; done) | ${ANDROID_HOME}/tools/bin/sdkmanager --package_file=/sdk/packages.txt
+
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
